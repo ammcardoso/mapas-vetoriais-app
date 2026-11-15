@@ -4,102 +4,117 @@ import { useEffect, useState } from "react";
 import { MapContainer, TileLayer, GeoJSON } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 
-// Centro aproximado de Minas Gerais: [latitude, longitude]
-const CENTRO_MINAS_GERAIS = [-18.58, -45.45];
+const CENTRO_LONDRINA = [-23.305, -51.165];
 
-const ESTILO_MUNICIPIO = {
-    color: "#38bdf8",
-    weight: 1,
-    opacity: 0.95,
-    fillColor: "#38bdf8",
-    fillOpacity: 0.12,
-};
-
-const ESTILO_DESTAQUE = {
-    weight: 3,
-    fillOpacity: 0.35,
-};
-
-function estiloBotaoCamada(ativo) {
+function estiloRegiao(feature) {
+    const cor = feature.properties?.cor || "#0284c7";
     return {
-        padding: "6px 12px",
-        borderRadius: 6,
-        border: "none",
-        fontSize: 12,
-        fontWeight: "bold",
-        cursor: "pointer",
-        background: ativo ? "#0284c7" : "transparent",
-        color: ativo ? "#ffffff" : "#94a3b8",
+        color: cor,
+        weight: 2,
+        opacity: 0.9,
+        fillColor: cor,
+        fillOpacity: 0.25,
     };
 }
 
-export default function MapaVetorial({ onSelecionarMunicipio }) {
+export default function MapaVetorial({ onSelecionarRegiao }) {
     const [dadosVetor, setDadosVetor] = useState(null);
     const [carregando, setCarregando] = useState(true);
-    const [tipoCamada, setTipoCamada] = useState("satelite");
+    const [tipoCamada, setTipoCamada] = useState("ruas");
 
-    // Faz o pedido do arquivo uma única vez, quando o mapa aparece na tela
     useEffect(() => {
-        fetch("/municipios-mg.geojson")
+        fetch("/londrina-regioes.geojson")
             .then((resposta) => {
                 if (!resposta.ok) {
                     throw new Error(`Falha ao baixar o GeoJSON: HTTP ${resposta.status}`);
                 }
                 return resposta.json();
             })
-            .then((dados) => {
-                setDadosVetor(dados);
-            })
-            .catch((erro) => {
-                console.error("Erro ao carregar o GeoJSON:", erro);
-            })
-            .finally(() => {
-                setCarregando(false);
-            });
+            .then((dados) => setDadosVetor(dados))
+            .catch((erro) => console.error("Erro ao carregar GeoJSON:", erro))
+            .finally(() => setCarregando(false));
     }, []);
 
-    // O Leaflet chama esta função uma vez para cada município do GeoJSON
     function aoConfigurarFeicao(feature, layer) {
-        const atributos = feature.properties;
+        const p = feature.properties;
 
         const conteudoPopup = `
-            <div style="font-family: system-ui, sans-serif; min-width: 200px; color: #0f172a;">
-                <h4 style="margin: 0 0 6px 0; color: #0284c7; font-size: 15px;">${atributos.NM_MUN}</h4>
-                <p style="margin: 2px 0; font-size: 12px;"><strong>Região imediata:</strong> ${atributos.NM_RGI}</p>
-                <p style="margin: 2px 0; font-size: 12px;"><strong>Região intermediária:</strong> ${atributos.NM_RGINT}</p>
-                <p style="margin: 2px 0; font-size: 12px;"><strong>Área:</strong> ${atributos.AREA_KM2.toLocaleString("pt-BR")} km²</p>
-                <p style="margin: 2px 0; font-size: 12px;"><strong>Código IBGE:</strong> ${atributos.CD_MUN}</p>
+            <div style="font-family: system-ui, sans-serif; min-width: 220px; color: #0f172a;">
+                <h4 style="margin: 0 0 6px 0; color: ${p.cor || "#0284c7"}; font-size: 15px;">
+                    ${p.nome}
+                </h4>
+                <p style="margin: 3px 0; font-size: 12px;">
+                    <strong>População estimada:</strong> ~${p.populacao_estimada?.toLocaleString("pt-BR")} hab.
+                </p>
+                <p style="margin: 3px 0; font-size: 12px;">
+                    <strong>Principais bairros:</strong> ${p.principais_bairros}
+                </p>
+                <p style="margin: 3px 0; font-size: 12px;">
+                    <strong>Perfil:</strong> ${p.perfil}
+                </p>
             </div>
         `;
 
         layer.bindPopup(conteudoPopup);
 
         layer.on({
-            mouseover: () => layer.setStyle(ESTILO_DESTAQUE),
-            mouseout: () => layer.setStyle(ESTILO_MUNICIPIO),
-            click: () => onSelecionarMunicipio(atributos),
+            mouseover: (e) => {
+                e.target.setStyle({
+                    weight: 4,
+                    fillOpacity: 0.5,
+                });
+            },
+            mouseout: (e) => {
+                e.target.setStyle(estiloRegiao(feature));
+            },
+            click: () => onSelecionarRegiao(p),
         });
     }
 
     return (
         <div style={{ position: "relative", width: "100%", height: "100%", borderRadius: "12px", overflow: "hidden", border: "1px solid #334155" }}>
-            {/* Alternador do mapa de fundo */}
             <div style={{ position: "absolute", top: 12, right: 12, zIndex: 1000, background: "rgba(15, 23, 42, 0.9)", border: "1px solid #334155", borderRadius: 8, padding: 4, display: "flex", gap: 4 }}>
-                <button type="button" onClick={() => setTipoCamada("satelite")} style={estiloBotaoCamada(tipoCamada === "satelite")}>
+                <button
+                    type="button"
+                    onClick={() => setTipoCamada("satelite")}
+                    style={{
+                        padding: "6px 12px",
+                        borderRadius: 6,
+                        border: "none",
+                        background: tipoCamada === "satelite" ? "#0284c7" : "transparent",
+                        color: tipoCamada === "satelite" ? "#fff" : "#94a3b8",
+                        cursor: "pointer",
+                        fontSize: 12,
+                        fontWeight: "bold",
+                    }}
+                >
                     Satélite
                 </button>
-                <button type="button" onClick={() => setTipoCamada("ruas")} style={estiloBotaoCamada(tipoCamada === "ruas")}>
+                <button
+                    type="button"
+                    onClick={() => setTipoCamada("ruas")}
+                    style={{
+                        padding: "6px 12px",
+                        borderRadius: 6,
+                        border: "none",
+                        background: tipoCamada === "ruas" ? "#0284c7" : "transparent",
+                        color: tipoCamada === "ruas" ? "#fff" : "#94a3b8",
+                        cursor: "pointer",
+                        fontSize: 12,
+                        fontWeight: "bold",
+                    }}
+                >
                     Ruas
                 </button>
             </div>
 
             {carregando && (
-                <div style={{ position: "absolute", top: 12, left: 56, zIndex: 1000, background: "rgba(15, 23, 42, 0.85)", color: "#38bdf8", padding: "6px 12px", borderRadius: 6, fontSize: 12, border: "1px solid #334155" }}>
-                    Carregando GeoJSON...
+                <div style={{ position: "absolute", top: 12, left: 56, zIndex: 1000, background: "rgba(15, 23, 42, 0.9)", color: "#38bdf8", padding: "6px 12px", borderRadius: 6, fontSize: 12 }}>
+                    Carregando Regiões de Londrina...
                 </div>
             )}
 
-            <MapContainer center={CENTRO_MINAS_GERAIS} zoom={6} style={{ height: "100%", width: "100%" }}>
+            <MapContainer center={CENTRO_LONDRINA} zoom={12} style={{ height: "100%", width: "100%" }}>
                 {tipoCamada === "satelite" ? (
                     <TileLayer
                         url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
@@ -117,7 +132,7 @@ export default function MapaVetorial({ onSelecionarMunicipio }) {
                 {dadosVetor && (
                     <GeoJSON
                         data={dadosVetor}
-                        style={ESTILO_MUNICIPIO}
+                        style={estiloRegiao}
                         onEachFeature={aoConfigurarFeicao}
                     />
                 )}

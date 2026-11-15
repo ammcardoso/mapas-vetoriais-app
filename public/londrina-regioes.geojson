@@ -1,0 +1,210 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Região Norte",
+        "cor": "#ef4444",
+        "populacao_estimada": 160000,
+        "principais_bairros": "Cinco Conjuntos, Maria Cecília, Vivi Xavier, Parigot de Souza, Milton Gavetti",
+        "perfil": "Alta densidade residencial, forte comércio local (Av. Saul Elkind) e polos industriais/esportivos."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -51.205,
+              -23.22
+            ],
+            [
+              -51.125,
+              -23.22
+            ],
+            [
+              -51.125,
+              -23.285
+            ],
+            [
+              -51.185,
+              -23.285
+            ],
+            [
+              -51.205,
+              -23.265
+            ],
+            [
+              -51.205,
+              -23.22
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Região Central",
+        "cor": "#f59e0b",
+        "populacao_estimada": 85000,
+        "principais_bairros": "Centro Histórico, Vila Brasil, Vila Nova, Jardim Higienópolis, Shangri-Lá",
+        "perfil": "Núcleo histórico, financeiro, comercial e administrativo de Londrina."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -51.185,
+              -23.285
+            ],
+            [
+              -51.145,
+              -23.285
+            ],
+            [
+              -51.145,
+              -23.32
+            ],
+            [
+              -51.185,
+              -23.32
+            ],
+            [
+              -51.185,
+              -23.285
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Região Sul",
+        "cor": "#10b981",
+        "populacao_estimada": 135000,
+        "principais_bairros": "Gleba Palhano, Jardim Bela Suíça, Parque Guanabara, Cafezal, União da Vitória",
+        "perfil": "Intensa verticalização, áreas nobres, shoppings, Lago Igapó e parques ambientais."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -51.195,
+              -23.32
+            ],
+            [
+              -51.135,
+              -23.32
+            ],
+            [
+              -51.135,
+              -23.385
+            ],
+            [
+              -51.195,
+              -23.385
+            ],
+            [
+              -51.195,
+              -23.32
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Região Leste",
+        "cor": "#3b82f6",
+        "populacao_estimada": 110000,
+        "principais_bairros": "Aeroporto, Jardim Califórnia, Ernani Moura Lima, Lindóia, Interlagos",
+        "perfil": "Bairros tradicionais, aeroporto governamental, parques tecnológicos e eixos viários."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -51.145,
+              -23.285
+            ],
+            [
+              -51.095,
+              -23.285
+            ],
+            [
+              -51.095,
+              -23.345
+            ],
+            [
+              -51.135,
+              -23.345
+            ],
+            [
+              -51.135,
+              -23.32
+            ],
+            [
+              -51.145,
+              -23.32
+            ],
+            [
+              -51.145,
+              -23.285
+            ]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "nome": "Região Oeste",
+        "cor": "#8b5cf6",
+        "populacao_estimada": 95000,
+        "principais_bairros": "Jardim Bandeirantes, Sabará, Olímpico, Palhano 2, Campus UEL",
+        "perfil": "Polo universitário (UEL), bairros residenciais consolidados e áreas de expansão."
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -51.235,
+              -23.285
+            ],
+            [
+              -51.185,
+              -23.285
+            ],
+            [
+              -51.185,
+              -23.32
+            ],
+            [
+              -51.195,
+              -23.32
+            ],
+            [
+              -51.195,
+              -23.345
+            ],
+            [
+              -51.235,
+              -23.345
+            ],
+            [
+              -51.235,
+              -23.285
+            ]
+          ]
+        ]
+      }
+    }
+  ]
+}
